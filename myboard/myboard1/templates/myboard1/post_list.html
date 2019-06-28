@@ -1,0 +1,53 @@
+<h1>게시글 목록</h1>
+
+<!--
+{% for post in posts %}
+  <h2><a href='{{ post.get_absolute_url }}'>{{ post.title }}</a></h2>
+  {{ post.modify_date|date:"N d, Y" }}
+  <p>{{ post.description }}</p>
+{% endfor %}
+
+<br/>
+-->
+
+<table border="1">
+  <col width="300"/>
+  <col width="100"/>
+  <col width="100"/>
+  <tr>
+    <th>제  목</th>
+    <th>작성자</th>
+    <th>작성일</th>
+  </tr>
+  {% for post in posts %}
+  <tr>
+    <td>
+      <a href='{{ post.get_absolute_url }}'>{{ post.title }}</a>
+    </td>
+    <td>{{ post.writer }}</td>
+    <td>{{ post.modify_date|date:"Y-m-d" }}</td>
+  </tr>
+  {% endfor %}
+  <tr>
+    <td colspan="3">
+      <input type="button" value="글쓰기" onclick="location.href='{% url 'myboard:post_write' %}'"/>
+    </td>
+  </tr>
+</table>
+
+<br/>
+
+
+<div>
+  <span>
+    {% if page_obj.has_previous %}
+      <a href="?page={{ page_obj.previous_page_number }}">PreviousPage</a>
+    {% endif %}
+
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+
+    {% if page_obj.has_next %}
+    <a href="?page={{ page_obj.next_page_number }}">NextPage</a>
+    {% endif %}
+  </span>
+</div>

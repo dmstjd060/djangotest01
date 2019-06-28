@@ -1,0 +1,9 @@
+<h1>글 작성 페이지</h1>
+<form method="post">
+  {% csrf_token %}
+  <table>
+  {{ form.as_table }}
+  </table>
+  <input type="submit" value="작성" />
+  <input type="button" value="취소" onclick="location.href='{% url 'myboard:post_list' %}'" />
+</form>

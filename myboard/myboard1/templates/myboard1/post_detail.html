@@ -1,0 +1,73 @@
+<h1>상세 글 보기</h1>
+
+<table border="1">
+  <tr>
+    <th>작성일</th>
+    <td>{{ object.modify_date|date:"Y년 m월 d일"}}</td>
+  </tr>
+  <tr>
+    <th>작성자</th>
+    <td>{{ object.writer }}</td>
+  </tr>
+  <tr>
+    <th>제  목</th>
+    <td>{{ object.title }}</td>
+  </tr>
+  <tr>
+    <th>내  용</th>
+    <td><textarea rows="10" cols="60" readonly="readonly">{{ object.content }}</textarea></td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <input type="button" value="삭제" onclick="location.href='{% url 'myboard:post_delete' object.id %}'">
+      <input type="button" value="수정" onclick="location.href='{% url 'myboard:post_update' object.id %}'">
+      <input type="button" value="목록" onclick="location.href='{% url 'myboard:post_list' %}'">
+    </td>
+  </tr>
+</table>
+
+<hr>
+  <h4>댓글 작성</h4>
+  <form action="{% url 'myboard:comment_write' post_pk=object.pk %}" method="POST">
+    {% csrf_token %}
+    <input type="text" name="writer" placeholder="이름"/>
+    <input type="text" name="content" placeholder="댓글을 입력하세요"/>
+    <input type="submit" value="확인"/>
+  </form>
+
+  <div id="commentUpdate" style="display:none">
+    <h4>댓글 수정</h4>
+    <form action="{% url 'myboard:comment_update' object.pk %}" method="POST">
+      {% csrf_token %}
+      <input type="hidden" name="c_pk"  id="updatePk"/>
+      <input type="text" name="writer"  id="updateWriter"/>
+      <input type="text" name="content"  id="updateContent"/>
+      <input type="submit" value="확인"/>
+    </form>
+  </div>
+
+<hr>
+
+{% for comment in object.comments.all %}
+<div>
+  <span>{{ comment.comment_date|date:"Y/m/d" }}</span>
+  <strong>{{ comment.comment_writer }}</strong>
+  <span>{{ comment.comment_contents }}</span>
+  <a href="#" onclick="javascript:commentUpdateForm('{{ comment.comment_writer }}', '{{ comment.comment_contents }}', '{{ comment.pk }}')" >수정하기</a>
+
+</div>
+
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+
+  function commentUpdateForm(c_writer, c_contents, c_pk){
+    $("#commentUpdate").toggle();
+    $("#updateWriter").val(c_writer);
+    $("#updateContent").val(c_contents);
+    $("#updatePk").val(c_pk);
+  }
+
+</script>
+
+{% endfor %}
